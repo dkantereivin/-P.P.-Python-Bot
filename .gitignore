@@ -125,3 +125,4 @@ dmypy.json
 
 # Other
 src/data/config.json
+.vscode
