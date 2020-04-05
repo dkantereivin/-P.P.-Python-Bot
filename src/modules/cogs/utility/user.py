@@ -1,9 +1,7 @@
 import discord
 from discord.ext import commands
-import asyncio
 
 from modules.utility.time import time_since
-from modules.utility.grabColour import grab_colour
 
 
 class User(commands.Cog):
@@ -58,37 +56,6 @@ class User(commands.Cog):
             name="Is a bot", value="Yes" if user.bot else "No", inline=False
         )
         embed.add_field(name="Roles", value=show_roles, inline=False)
-        #         embed.description = f"""Full name: **{user}**
-        # Nickname: **{user.nick or 'None'}**
-        # Account created: **{time_since(past_datetime=user.created_at,max_units=3)}**
-        # User ID: **{user.id}**
-        # Join date: **{time_since(past_datetime=user.joined_at,max_units=3)}**
-        # Is a bot: **{'Yes' if user.bot else 'No'}**
-        # Roles: {show_roles}
-        # """
-
-        # embed.add_field(
-        #     name="Nickname",
-        #     value=user.nick if hasattr(user, "nick") else "None",
-        #     inline=False,
-        # )
-
-        # embed.add_field(
-        #     name="Account created",
-        #     value=time_since(past_datetime=user.created_at, precision="minutes"),
-        #     inline=False,
-        # )
-        # embed.add_field(name="ID", value=user.id, inline=False)
-
-        # embed.add_field(
-        #     name="Joined this server",
-        #     value=time_since(past_datetime=user.joined_at, precision="minutes"),
-        #     inline=False,
-        # )
-
-        # embed.add_field(name="Bot", value=user.bot, inline=False)
-
-        # embed.add_field(name="Roles", value=show_roles, inline=False)
 
         embed.set_footer(icon_url=user.avatar_url, text=premium_status)
 

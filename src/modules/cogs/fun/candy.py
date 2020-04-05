@@ -1,10 +1,8 @@
 import discord
-import json
 
 from discord.ext.commands.cooldowns import BucketType
 from discord.ext import commands
 import asyncio
-import pymongo
 
 
 class Candy(commands.Cog):
@@ -37,7 +35,7 @@ class Candy(commands.Cog):
         else:
             embed.description = f"🍬 | {msg0[1].mention} won and ate the candy!"
             res = self.bot.db.candy.find_one({"userid": str(ctx.author.id)})
-            if res != None:
+            if res is not None:
                 self.bot.db.candy.find_one_and_update(
                     {"userid": str(ctx.author.id)},
                     {"$set": {"count": str(int(res["count"]) + 1)}},

@@ -1,16 +1,13 @@
 import discord
-from discord.ext import commands
-import asyncio
 
 
 from PIL import Image
 import requests
 from io import BytesIO
-from PIL import _imaging
 
 
 def grab_colour(url):
-    if url != None:
+    if url is not None:
         response = requests.get(url)
         im = Image.open(BytesIO(response.content))
         im = im.convert("RGB")

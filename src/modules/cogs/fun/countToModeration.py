@@ -1,4 +1,3 @@
-import discord
 from discord.ext import commands
 
 
@@ -27,9 +26,6 @@ class countToModeration(commands.Cog):
         )
         for elem in needsRemoving:
             await elem.delete()
-
-        def predicate(message):
-            return not (message.content.split()[0]).isdigit()
 
         hist = await self.bot.channels["count-to-100k"].history(limit=100).flatten()
 
@@ -113,7 +109,7 @@ class countToModeration(commands.Cog):
                     "Please make sure your message meets these criterias:\n- Does not contain a codeblock.\n- Does not go onto a new line.\n- Is Not greater than 40 characters."
                 )
                 return
-            if not int(after.content.split()[0]) == int(before.content.split()[0]):
+            if int(after.content.split()[0]) != int(before.content.split()[0]):
                 await after.author.send(
                     f"Please make sure when you edit the message the number stays the same (`{before.content.split()[0]}`)!"
                 )

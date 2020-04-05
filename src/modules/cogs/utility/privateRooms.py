@@ -84,7 +84,7 @@ class PrivateRooms(commands.Cog):
         return
 
     @commands.Cog.listener()
-    async def on_voice_state_update(self, member, before, after):
+    async def on_voice_state_update(self, _member, before, after):
         if after.channel is not None:
             tempid = int(after.channel.name.strip("private room #"))
 

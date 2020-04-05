@@ -1,7 +1,4 @@
-import discord
 from discord.ext import commands
-import pymongo
-
 
 class Emote(commands.Cog):
     def __init__(self, bot):

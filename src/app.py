@@ -1,4 +1,3 @@
-from asyncio import Event
 import json
 import os
 
@@ -10,7 +9,6 @@ from discord.ext import commands
 from datetime import datetime
 from pytz import timezone
 import pymongo
-import urllib.parse
 
 # Set path to bot directory
 dir_path = os.path.dirname(os.path.realpath(__file__))

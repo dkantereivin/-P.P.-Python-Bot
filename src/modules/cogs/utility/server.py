@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-import asyncio
 
 from modules.utility.time import time_since
 from modules.utility.grabColour import grab_colour
