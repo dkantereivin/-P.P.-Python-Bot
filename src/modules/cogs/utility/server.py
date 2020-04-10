@@ -52,7 +52,8 @@ class Server(commands.Cog):
         embed.add_field(
             name="Server Information",
             inline=False,
-            value="Name: **{}**\nID: **{}**\nCreated: **{}**\nVoice region: **{}**\nSpecial features: **{}**".format(
+            value="Name: **{}**\nID: **{}**\nCreated: **{}**\nVoice region: **{}**\n" \
+                "Special features: **{}**".format(
                 ctx.guild.name, ctx.guild.id, created, region, features
             ),
         )
@@ -60,7 +61,8 @@ class Server(commands.Cog):
         embed.add_field(
             name="Counts",
             inline=False,
-            value="Members: **{}**\nRoles: **{}**\nText channels: **{}**\n Voice channels: **{}**\nChannel categories: **{}**".format(
+            value="Members: **{}**\nRoles: **{}**\nText channels: **{}**\n" \
+                "Voice channels: **{}**\nChannel categories: **{}**".format(
                 member_count, roles, text_channels, voice_channels, category_channels
             ),
         )
@@ -68,7 +70,8 @@ class Server(commands.Cog):
         embed.add_field(
             name="Members",
             inline=False,
-            value=f"<:online:695811388488024064> {online}\n<:away:695811388379234316> {idle}\n<:dnd:695811388744007700> {dnd}\n<:offline:695811388320514139> {offline}",
+            value=f"<:online:695811388488024064> {online}\n<:away:695811388379234316>" \
+                  f"{idle}\n<:dnd:695811388744007700> {dnd}\n<:offline:695811388320514139> {offline}",
         )
 
         embed.set_thumbnail(url=ctx.guild.icon_url)

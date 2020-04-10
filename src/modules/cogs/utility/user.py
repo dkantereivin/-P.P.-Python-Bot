@@ -15,7 +15,10 @@ class User(commands.Cog):
         user = user or ctx.author
         premium_status = "Not a nitro booster"
         premium_status = (
-            f"This user has been boosting for {time_since(past_datetime = user.premium_since, max_units=3)}."
+
+            f"This user has been boosting for " \
+            f"{time_since(past_datetime = user.premium_since, max_units=3)}."
+
             if user.premium_since
             else "This user is not boosting the server"
         )
@@ -25,11 +28,9 @@ class User(commands.Cog):
         #     )
         show_roles = (
             ", ".join(
-                [
                     f"<@&{x.id}>"
                     for x in sorted(user.roles, key=lambda x: x.position, reverse=True)
                     if x.id != ctx.guild.default_role.id
-                ]
             )
             if len(user.roles) > 1
             else f"None"

@@ -2,7 +2,6 @@ import json
 import os
 
 # from modules.cogs.database import ConnectionHolder
-from sys import exit
 from traceback import format_exception, format_exc
 import discord
 from discord.ext import commands
@@ -35,6 +34,8 @@ class PPBot(commands.Bot):
         self.exitcode = 0
         self.db = pymongo.MongoClient(config["connectionURI"]).bot
         self.config = self.db.bot.find_one({})
+        self.guild = None
+        self.help_command = None
 
         self.channels = self.db.channels.find_one({})
         self.roles = self.db.roles.find_one({})
@@ -43,7 +44,7 @@ class PPBot(commands.Bot):
         for extension in cogs:
             try:
                 self.load_extension(extension)
-            except BaseException as e:
+            except commands.ExtensionNotFound or commands.ExtensionAlreadyLoaded or commands.ExtensionFailed as e:
                 print(e)
                 print(f"{extension} failed to load.", extension)
                 self.failed_cogs.append([extension, type(e).__name__, e])
@@ -123,19 +124,21 @@ class PPBot(commands.Bot):
                 else:
                     print(f"Failed to find role: {n}")
 
-        startup_message = f"PP Bot has started! {self.guild.name} has {self.guild.member_count} members"
+        startup_message = f"PP Bot has started! {self.guild.name} has" \
+                          f" {self.guild.member_count} members"
         if len(self.failed_cogs) != 0:
             startup_message += "\n\nSome addons failed to load:\n"
             for f in self.failed_cogs:
                 print(f)
-                f[0] = f[0].replace("_", "\_")
+                f[0] = f[0].replace("_", "\\_")
                 startup_message += "\n{}: ```py\n{}: {}```".format(*f)
         embed = discord.Embed(
             description=startup_message, colour=0x36393F, timestamp=self.startup
         )
         embed.set_author(
             name="Python",
-            icon_url="https://www.stickpng.com/assets/images/5848152fcef1014c0b5e4967.png",
+            icon_url="https://www.stickpng.com/assets/images/" \
+                     "5848152fcef1014c0b5e4967.png",
         )
 
         print(startup_message)
@@ -148,10 +151,7 @@ class PPBot(commands.Bot):
         command: commands.Command = ctx.command or "<unknown cmd>"
         exc = getattr(exc, "original", exc)
 
-        if isinstance(exc, commands.CommandNotFound):
-            return
-
-        elif isinstance(exc, commands.NoPrivateMessage):
+        if isinstance(exc, commands.NoPrivateMessage):
             await ctx.send(f"`{command}` cannot be used in direct messages.")
 
         elif isinstance(exc, commands.MissingPermissions):
@@ -173,7 +173,9 @@ class PPBot(commands.Bot):
                 except (discord.errors.NotFound, discord.errors.Forbidden):
                     pass
                 await ctx.send(
-                    f"{ctx.message.author.mention} This command was used {exc.cooldown.per - exc.retry_after:.2f}s ago and is on cooldown. Try again in {exc.retry_after:.2f}s.",
+                    f"{ctx.message.author.mention} This command was used" \
+                    f" {exc.cooldown.per - exc.retry_after:.2f}s ago and" \
+                    f" is on cooldown. Try again in {exc.retry_after:.2f}s.",
                     delete_after=10,
                 )
             else:
@@ -181,7 +183,8 @@ class PPBot(commands.Bot):
 
         elif isinstance(exc, commands.MissingRequiredArgument):
             await ctx.send(
-                f"{author.mention} You are missing required argument {exc.param.name}.\n"
+                f"{author.mention} You are missing required argument" \
+                f" {exc.param.name}.\n"
             )
             await ctx.send_help(ctx.command)
 
@@ -196,22 +199,23 @@ class PPBot(commands.Bot):
                 f"{author.mention} `{command}` raised an exception during usage"
             )
             msg = "".join(format_exception(type(exc), exc, exc.__traceback__))
-            for chunk in [msg[i : i + 1800] for i in range(0, len(msg), 1800)]:
+            for chunk in [msg[i: i + 1800] for i in range(0, len(msg), 1800)]:
                 await self.channels["logging"].send(f"```\n{chunk}\n```")
         else:
             if not isinstance(command, str):
                 command.reset_cooldown(ctx)
             await ctx.send(
-                f"{author.mention} Unexpected exception occurred while using the command `{command}`"
+                f"{author.mention} Unexpected exception occurred" \
+                f" while using the command `{command}`"
             )
             msg = "".join(format_exception(type(exc), exc, exc.__traceback__))
-            for chunk in [msg[i : i + 1800] for i in range(0, len(msg), 1800)]:
+            for chunk in [msg[i: i + 1800] for i in range(0, len(msg), 1800)]:
                 await self.channels["logging"].send(f"```\n{chunk}\n```")
 
     async def on_error(self, event_method, *args, **kwargs):
         await self.channels["logging"].send(f"Error in {event_method}:")
         msg = format_exc()
-        for chunk in [msg[i : i + 1800] for i in range(0, len(msg), 1800)]:
+        for chunk in [msg[i: i + 1800] for i in range(0, len(msg), 1800)]:
             await self.channels["logging"].send(f"```\n{chunk}\n```")
 
     def add_cog(self, cog):

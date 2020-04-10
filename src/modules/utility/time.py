@@ -9,13 +9,13 @@ def _stringify_time_unit(value: int, unit: str):
         return f"{value} {unit[:-1]}"
     elif value == 0:
         return f"less than a {unit[:-1]}"
-    else:
-        return f"{value} {unit}"
+    return f"{value} {unit}"
 
 
 def humanize_delta(
     delta: relativedelta, precision: str = "seconds", max_units: int = 6
 ):
+    """Humanizes given relativedelta"""
 
     units = (
         ("years", delta.years),
@@ -51,6 +51,7 @@ def humanize_delta(
 def time_since(
     past_datetime: datetime.datetime, precision: str = "seconds", max_units: int = 6
 ):
+    """Returns the time since given datetime in humanized form"""
 
     now = datetime.datetime.utcnow()
     delta = abs(relativedelta(now, past_datetime))

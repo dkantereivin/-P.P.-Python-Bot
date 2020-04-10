@@ -4,6 +4,7 @@ from .privateRooms import PrivateRooms
 
 
 def setup(bot):
+    """Initialises utility cogs"""
     bot.add_cog(Server(bot))
     bot.add_cog(User(bot))
     bot.add_cog(PrivateRooms(bot))
