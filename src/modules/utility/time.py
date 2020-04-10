@@ -7,7 +7,7 @@ def _stringify_time_unit(value: int, unit: str):
 
     if value == 1:
         return f"{value} {unit[:-1]}"
-    elif value == 0:
+    if value == 0:
         return f"less than a {unit[:-1]}"
     return f"{value} {unit}"
 

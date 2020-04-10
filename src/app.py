@@ -44,7 +44,11 @@ class PPBot(commands.Bot):
         for extension in cogs:
             try:
                 self.load_extension(extension)
-            except commands.ExtensionNotFound or commands.ExtensionAlreadyLoaded or commands.ExtensionFailed as e:
+            except (
+                commands.ExtensionNotFound,
+                commands.ExtensionAlreadyLoaded,
+                commands.ExtensionFailed,
+            ) as e:
                 print(e)
                 print(f"{extension} failed to load.", extension)
                 self.failed_cogs.append([extension, type(e).__name__, e])
@@ -124,8 +128,10 @@ class PPBot(commands.Bot):
                 else:
                     print(f"Failed to find role: {n}")
 
-        startup_message = f"PP Bot has started! {self.guild.name} has" \
-                          f" {self.guild.member_count} members"
+        startup_message = (
+            f"PP Bot has started! {self.guild.name} has"
+            f" {self.guild.member_count} members"
+        )
         if len(self.failed_cogs) != 0:
             startup_message += "\n\nSome addons failed to load:\n"
             for f in self.failed_cogs:
@@ -137,85 +143,87 @@ class PPBot(commands.Bot):
         )
         embed.set_author(
             name="Python",
-            icon_url="https://www.stickpng.com/assets/images/" \
-                     "5848152fcef1014c0b5e4967.png",
+            icon_url="https://www.stickpng.com/assets/images/"
+            "5848152fcef1014c0b5e4967.png",
         )
 
         print(startup_message)
         await self.channels["logging"].send(embed=embed)
 
     async def on_command_error(
-        self, ctx: commands.Context, exc: commands.CommandInvokeError
+        self, context: commands.Context, exception: commands.CommandInvokeError
     ):
-        author: discord.Member = ctx.author
-        command: commands.Command = ctx.command or "<unknown cmd>"
-        exc = getattr(exc, "original", exc)
+        author: discord.Member = context.author
+        command: commands.Command = context.command or "<unknown cmd>"
+        exc = getattr(exception, "original", exception)
 
         if isinstance(exc, commands.NoPrivateMessage):
-            await ctx.send(f"`{command}` cannot be used in direct messages.")
+            await context.send(f"`{command}` cannot be used in direct messages.")
 
         elif isinstance(exc, commands.MissingPermissions):
-            await ctx.send(
+            await context.send(
                 f"{author.mention} You don't have permission to use `{command}`."
             )
 
         elif isinstance(exc, commands.CheckFailure):
-            await ctx.send(f"{author.mention} You cannot use `{command}`.")
+            await context.send(f"{author.mention} You cannot use `{command}`.")
 
         elif isinstance(exc, commands.BadArgument):
-            await ctx.send(f"{author.mention} A bad argument was given: `{exc}`\n")
-            await ctx.send_help(ctx.command)
+            await context.send(f"{author.mention} A bad argument was given: `{exc}`\n")
+            await context.send_help(context.command)
 
         elif isinstance(exc, discord.ext.commands.errors.CommandOnCooldown):
-            if str(ctx.author.id) not in self.config["developers"]:
+            if str(context.author.id) not in self.config["developers"]:
                 try:
-                    await ctx.message.delete()
+                    await context.message.delete()
                 except (discord.errors.NotFound, discord.errors.Forbidden):
                     pass
-                await ctx.send(
-                    f"{ctx.message.author.mention} This command was used" \
-                    f" {exc.cooldown.per - exc.retry_after:.2f}s ago and" \
+                await context.send(
+                    f"{context.message.author.mention} This command was used"
+                    f" {exc.cooldown.per - exc.retry_after:.2f}s ago and"
                     f" is on cooldown. Try again in {exc.retry_after:.2f}s.",
                     delete_after=10,
                 )
             else:
-                await ctx.reinvoke()
+                await context.reinvoke()
 
         elif isinstance(exc, commands.MissingRequiredArgument):
-            await ctx.send(
-                f"{author.mention} You are missing required argument" \
+            await context.send(
+                f"{author.mention} You are missing required argument"
                 f" {exc.param.name}.\n"
             )
-            await ctx.send_help(ctx.command)
+            await context.send_help(context.command)
 
         elif isinstance(exc, discord.NotFound):
-            await ctx.send(f"ID not found.")
+            await context.send(f"ID not found.")
 
         elif isinstance(exc, discord.Forbidden):
-            await ctx.send(f"💢 AAAAAA The server isn't letting me in!\n`{exc.text}`.")
+            await context.send(
+                f"💢 AAAAAA The server isn't letting me in!\n`{exc.text}`."
+            )
 
         elif isinstance(exc, commands.CommandInvokeError):
-            await ctx.send(
+            await context.send(
                 f"{author.mention} `{command}` raised an exception during usage"
             )
             msg = "".join(format_exception(type(exc), exc, exc.__traceback__))
-            for chunk in [msg[i: i + 1800] for i in range(0, len(msg), 1800)]:
+            for chunk in [msg[i : i + 1800] for i in range(0, len(msg), 1800)]:
                 await self.channels["logging"].send(f"```\n{chunk}\n```")
         else:
             if not isinstance(command, str):
-                command.reset_cooldown(ctx)
-            await ctx.send(
-                f"{author.mention} Unexpected exception occurred" \
+                command.reset_cooldown(context)
+            await context.send(
+                f"{author.mention} Unexpected exception occurred"
                 f" while using the command `{command}`"
             )
             msg = "".join(format_exception(type(exc), exc, exc.__traceback__))
-            for chunk in [msg[i: i + 1800] for i in range(0, len(msg), 1800)]:
+            for chunk in [msg[i : i + 1800] for i in range(0, len(msg), 1800)]:
                 await self.channels["logging"].send(f"```\n{chunk}\n```")
 
     async def on_error(self, event_method, *args, **kwargs):
         await self.channels["logging"].send(f"Error in {event_method}:")
         msg = format_exc()
-        for chunk in [msg[i: i + 1800] for i in range(0, len(msg), 1800)]:
+        for chunk in [msg[i : i + 1800] for i in range(0, len(msg), 1800)]:
             await self.channels["logging"].send(f"```\n{chunk}\n```")
 
     def add_cog(self, cog):

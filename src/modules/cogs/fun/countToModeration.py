@@ -61,7 +61,7 @@ class countToModeration(commands.Cog):
         if message.channel == self.bot.channels["count-to-100k"]:
             if self.lastNum == 0:
                 return await message.author.send(
-                    f"Please wait while the bot initializes" \
+                    f"Please wait while the bot initializes"
                     f" {self.bot.channels['count-to-100k'].mention}"
                 )
             if not (message.content.split()[0]).isdigit():
@@ -75,18 +75,18 @@ class countToModeration(commands.Cog):
             ):
                 await message.delete()
                 await message.author.send(
-                    "Please make sure your message meets these criterias:\n" \
-                    "- Does not contain a codeblock.\n"\
-                    "- Does not go onto a new line.\n" \
+                    "Please make sure your message meets these criterias:\n"
+                    "- Does not contain a codeblock.\n"
+                    "- Does not go onto a new line.\n"
                     "- Is Not greater than 40 characters."
                 )
                 return
             if not int(message.content.split()[0]) - 1 == self.lastNum:
                 await message.delete()
                 await message.author.send(
-                    f"Please make sure the number you have" \
-                    f" posted follows the previous" \
-                    f" number (`{self.lastNum}`) which should" \
+                    f"Please make sure the number you have"
+                    f" posted follows the previous"
+                    f" number (`{self.lastNum}`) which should"
                     f" be `{self.lastNum + 1}`!"
                 )
                 return
@@ -104,7 +104,7 @@ class countToModeration(commands.Cog):
         if after.channel == self.bot.channels["count-to-100k"]:
             if not (after.content.split()[0]).isdigit():
                 await after.author.send(
-                    f"Please make sure that your edit contains the number" \
+                    f"Please make sure that your edit contains the number"
                     f" {before.content.split()[0]} at the start!"
                 )
                 return
@@ -114,15 +114,15 @@ class countToModeration(commands.Cog):
                 or len(after.content) > 40
             ):
                 await after.author.send(
-                    "Please make sure your message meets these criterias:\n" \
-                    "- Does not contain a codeblock.\n" \
-                    "- Does not go onto a new line.\n" \
+                    "Please make sure your message meets these criterias:\n"
+                    "- Does not contain a codeblock.\n"
+                    "- Does not go onto a new line.\n"
                     "- Is Not greater than 40 characters."
                 )
                 return
             if int(after.content.split()[0]) != int(before.content.split()[0]):
                 await after.author.send(
-                    f"Please make sure when you edit the message the number stays" \
+                    f"Please make sure when you edit the message the number stays"
                     f" the same (`{before.content.split()[0]}`)!"
                 )
                 return
@@ -135,32 +135,32 @@ class countToModeration(commands.Cog):
             )
             if not (msg.content.split()[0]).isdigit():
                 await msg.author.send(
-                    f"Please make sure that your edit contains the correct number" \
+                    f"Please make sure that your edit contains the correct number"
                     f" at the start!"
                 )
                 await self.bot.channels["logging"].send(
-                    f"User: {msg.author.mention} edited their message in" \
-                    f" {self.bot.channels['count-to-100k'].mention}," \
-                    f" and the message does not start with a number:" \
+                    f"User: {msg.author.mention} edited their message in"
+                    f" {self.bot.channels['count-to-100k'].mention},"
+                    f" and the message does not start with a number:"
                     f" {msg.jump_url}"
                 )
                 return
             if "\n" in msg.content or "```" in msg.content or len(msg.content) > 40:
                 await msg.author.send(
-                    f"Please make sure your edit meets these criterias:\n" \
-                    f"- Does not contain a codeblock.\n" \
-                    f"- Does not go onto a new line.\n" \
+                    f"Please make sure your edit meets these criterias:\n"
+                    f"- Does not contain a codeblock.\n"
+                    f"- Does not go onto a new line.\n"
                     f"- Is Not greater than 40 characters."
                 )
                 await self.bot.channels["logging"].send(
-                    f"User: {msg.author.mention} edited their message in " \
-                    f"{self.bot.channels['count-to-100k'].mention}," \
+                    f"User: {msg.author.mention} edited their message in "
+                    f"{self.bot.channels['count-to-100k'].mention},"
                     f" and the message contains illegal parameters: {msg.jump_url}"
                 )
                 return
             await self.bot.channels["logging"].send(
-                f"User: {msg.author.mention} edited their message in " \
-                f"{self.bot.channels['count-to-100k'].mention}, " \
-                f"and the message is not in the cache therefore " \
+                f"User: {msg.author.mention} edited their message in "
+                f"{self.bot.channels['count-to-100k'].mention}, "
+                f"and the message is not in the cache therefore "
                 f"cannot be checked: {msg.jump_url}"
             )
