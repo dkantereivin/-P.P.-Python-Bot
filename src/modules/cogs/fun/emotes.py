@@ -8,7 +8,7 @@ class Emote(commands.Cog):
         self.emotes = None
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.get_emotes())
-   
+
     async def get_emotes(self):
         self.emotes = await self.bot.db.emotes.find_one({})
 
