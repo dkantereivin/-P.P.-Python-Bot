@@ -31,7 +31,7 @@ class Candy(commands.Cog):
         try:
             msg0 = await self.bot.wait_for("reaction_add", check=check, timeout=5.0)
         except asyncio.TimeoutError:
-            embed.description = f"You didnt eat the candy in time!"
+            embed.description = "You didnt eat the candy in time!"
         else:
             embed.description = f"🍬 | {msg0[1].mention} won and ate the candy!"
             res = await self.bot.db.candy.find_one({"userid": str(ctx.author.id)})
@@ -61,8 +61,7 @@ class Candy(commands.Cog):
             counter += 1
             if counter > 10:
                 break
-            else:
-                u = self.bot.get_user(int(a))
-                res += f"\n**{counter}.** {u.mention} - **{lb[str(a)]} 🍬**"
+            u = self.bot.get_user(int(a))
+            res += f"\n**{counter}.** {u.mention} - **{lb[str(a)]} 🍬**"
         embed = discord.Embed(description=res, colour=0x36393F)
         await ctx.send(embed=embed)
