@@ -125,3 +125,8 @@ dmypy.json
 
 # Jetbrains Products
 .idea/*
+
+# Other
+src/data/config.json
+.vscode
+
