@@ -35,7 +35,7 @@ class PPBot(commands.Bot):
         self.exitcode = 0
         self.guild = None
         self.help_command = None
-        
+
         self.db = None
         self.config = None
         self.channels = None
