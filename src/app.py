@@ -41,6 +41,7 @@ class PPBot(commands.Bot):
         self.roles = self.db.roles.find_one({})
 
     def load_cogs(self):
+        self.load_extention("jishaku")
         for extension in cogs:
             try:
                 self.load_extension(extension)
