@@ -123,6 +123,10 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Jetbrains Products
+.idea/*
+
 # Other
 src/data/config.json
 .vscode
+
