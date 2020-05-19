@@ -35,8 +35,11 @@ class PPBot(commands.Bot):
         self.exitcode = 0
         self.guild = None
         self.help_command = None
-
-
+        
+        self.db = None
+        self.config = None
+        self.channels = None
+        self.roles = None
 
     async def initializeDB(self):
         self.db = motor.motor_asyncio.AsyncIOMotorClient(
@@ -203,7 +206,7 @@ class PPBot(commands.Bot):
             await context.send_help(context.command)
 
         elif isinstance(exc, discord.NotFound):
-            await context.send(f"ID not found.")
+            await context.send("ID not found.")
 
         elif isinstance(exc, discord.Forbidden):
             await context.send(
@@ -257,10 +260,10 @@ def main():
     print("Connecting to the DB...")
     loop = asyncio.get_event_loop()
     loop.run_until_complete(bot.initializeDB())
-    print(f"Loading modules...")
+    print("Loading modules...")
     loop.run_until_complete(bot.load_cogs())
     bot.help_command = commands.DefaultHelpCommand(dm_help=None)
-    print(f"Connecting to discord...")
+    print("Connecting to discord...")
     bot.run(bot.config["token"])
 
     return bot.exitcode
