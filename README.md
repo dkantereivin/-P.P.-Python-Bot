@@ -18,11 +18,11 @@ Current functionalities:
 # Self Hosting
 **Caution**: *this bot is configured to function for one specific guild, self hosting this bot is not recommended! (If you do, please make sure to include our license!!)*
 ```css
-configure the config.json file. [there is an example-config.json file in src/data/]
+Configure the config.json file. {there is an example-config.json file in src/data/}
 
-setup a [MongoDB] database
+Setup a [MongoDB] database
 
-include your bot token in the MongoDB database.
+Include your bot token in the MongoDB database.
 
 Run your bot!
 ```
