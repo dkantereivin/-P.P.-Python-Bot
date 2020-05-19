@@ -1,6 +1,3 @@
-python
-
-
 The Official Programmers Palace Discord bot written in python!
 
 Current functionalities:
