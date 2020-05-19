@@ -34,14 +34,14 @@ class Candy(commands.Cog):
             embed.description = f"You didnt eat the candy in time!"
         else:
             embed.description = f"🍬 | {msg0[1].mention} won and ate the candy!"
-            res = self.bot.db.candy.find_one({"userid": str(ctx.author.id)})
+            res = await self.bot.db.candy.find_one({"userid": str(ctx.author.id)})
             if res is not None:
-                self.bot.db.candy.find_one_and_update(
+                await self.bot.db.candy.find_one_and_update(
                     {"userid": str(ctx.author.id)},
                     {"$set": {"count": str(int(res["count"]) + 1)}},
                 )
             else:
-                self.bot.db.candy.insert_one(
+                await self.bot.db.candy.insert_one(
                     {"userid": str(ctx.author.id), "count": "1"}
                 )
         await msg.edit(embed=embed)
@@ -49,7 +49,7 @@ class Candy(commands.Cog):
     @candy.command(aliases=["lb", "top"])
     async def leaderboard(self, ctx):
         """The leaderboard of the best candy players!"""
-        tmp = self.bot.db.candy.find({})
+        tmp = await self.bot.db.candy.find({})
         lb = {}
         for i in tmp:
             lb[i["userid"]] = i["count"]
