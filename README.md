@@ -4,6 +4,7 @@ python
 The Official Programmers Palace Discord bot written in python!
 
 Current functionalities:
+
 `auto-moderation for the count-to-100000 channel`
 
 `candy command which lets players compete against each other`
@@ -19,6 +20,8 @@ Current functionalities:
 **Caution**: *this bot is configured to function for one specific guild, self hosting this bot is not recommended! (If you do, please make sure to include our license!!)*
 ```css
 Configure the config.json file. {there is an example-config.json file in src/data/}
+
+Install requirements.txt
 
 Setup a [MongoDB] database
 
