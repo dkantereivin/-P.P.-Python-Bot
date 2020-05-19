@@ -7,7 +7,8 @@ import discord
 from discord.ext import commands
 from datetime import datetime
 from pytz import timezone
-import pymongo
+import asyncio
+import motor
 
 # Set path to bot directory
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -32,15 +33,25 @@ class PPBot(commands.Bot):
         self.pruning = False
         self.failed_cogs = []
         self.exitcode = 0
-        self.db = pymongo.MongoClient(config["connectionURI"]).bot
-        self.config = self.db.bot.find_one({})
         self.guild = None
         self.help_command = None
 
-        self.channels = self.db.channels.find_one({})
-        self.roles = self.db.roles.find_one({})
+        self.db = None
+        self.config = None
+        self.channels = None
+        self.roles = None
 
-    def load_cogs(self):
+    async def initializeDB(self):
+        self.db = motor.motor_asyncio.AsyncIOMotorClient(
+            config["connectionURI"]
+        )
+        self.db = self.db.bot
+        self.config = await self.db.bot.find_one({})
+
+        self.channels = await self.db.channels.find_one({})
+        self.roles = await self.db.roles.find_one({})
+
+    async def load_cogs(self):
         for extension in cogs:
             try:
                 self.load_extension(extension)
@@ -195,7 +206,7 @@ class PPBot(commands.Bot):
             await context.send_help(context.command)
 
         elif isinstance(exc, discord.NotFound):
-            await context.send(f"ID not found.")
+            await context.send("ID not found.")
 
         elif isinstance(exc, discord.Forbidden):
             await context.send(
@@ -244,11 +255,15 @@ class PPBot(commands.Bot):
 
 def main():
     """Main script to run the bot."""
-
+    print("Bot initalizing...")
     bot = PPBot((".", "!"))
+    print("Connecting to the DB...")
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(bot.initializeDB())
+    print("Loading modules...")
+    loop.run_until_complete(bot.load_cogs())
     bot.help_command = commands.DefaultHelpCommand(dm_help=None)
-    print(f"Starting the bot!")
-    bot.load_cogs()
+    print("Connecting to discord...")
     bot.run(bot.config["token"])
 
     return bot.exitcode
