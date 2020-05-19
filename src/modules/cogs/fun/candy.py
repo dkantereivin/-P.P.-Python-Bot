@@ -66,7 +66,3 @@ class Candy(commands.Cog):
                 res += f"\n**{counter}.** {u.mention} - **{lb[str(a)]} 🍬**"
         embed = discord.Embed(description=res, colour=0x36393F)
         await ctx.send(embed=embed)
-
-        
-def setup(bot):
-    bot.add_cog(Candy(bot))
